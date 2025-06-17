@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# Script Integrado de Ferramentas de Diagnóstico e Utilitários - VERSÃO SEM SUDO
+# Script Integrado de Ferramentas de Diagnóstico e Utilitários - VERSÃO ATUALIZADA
 # Autor: Script para diagnóstico de sistema e rede
-# Modificado por: Erivelton de Lima da Cruz
+# Atualizado por: Erivelton de Lima da Cruz
 
 clear
 echo "=============================================="
 echo "  FERRAMENTAS INTEGRADAS - DIAGNÓSTICO E UTILITÁRIOS"
-echo "  VERSÃO SEM SUDO - INSTALAÇÃO OPCIONAL"
+echo "  VERSÃO ATUALIZADA COM CORREÇÕES E NOVAS FERRAMENTAS"
 echo "=============================================="
 
 # Função para verificar se uma ferramenta está instalada
@@ -47,6 +47,42 @@ offer_install() {
         echo "Instalação cancelada pelo usuário."
         return 1
     fi
+}
+
+# Função para instalar Docker
+install_docker() {
+    echo "🐳 Instalando Docker..."
+    
+    # Atualizar repositórios
+    apt update
+    
+    # Instalar dependências
+    apt install -y apt-transport-https ca-certificates curl gnupg lsb-release
+    
+    # Adicionar chave GPG oficial do Docker
+    curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    
+    # Adicionar repositório Docker
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+    
+    # Atualizar repositórios novamente
+    apt update
+    
+    # Instalar Docker
+    apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    
+    # Iniciar e habilitar Docker
+    systemctl start docker
+    systemctl enable docker
+    
+    # Adicionar usuário atual ao grupo docker (se não for root)
+    if [ "$EUID" -ne 0 ]; then
+        usermod -aG docker $USER
+        echo "⚠️  Você foi adicionado ao grupo docker. Faça logout e login novamente para usar Docker sem sudo."
+    fi
+    
+    echo "✅ Docker instalado com sucesso!"
+    return 0
 }
 
 # Função para instalar lazydocker
@@ -125,12 +161,12 @@ show_menu() {
     clear
     echo "=============================================="
     echo "  FERRAMENTAS INTEGRADAS - DIAGNÓSTICO E UTILITÁRIOS"
-    echo "  VERSÃO SEM SUDO - INSTALAÇÃO OPCIONAL"
+    echo "  VERSÃO ATUALIZADA COM CORREÇÕES E NOVAS FERRAMENTAS"
     echo "=============================================="
     echo ""
     echo "=== TESTES DE REDE ==="
     echo "1)  🌐 speed-cloudflare-cli (velocidade Cloudflare)"
-    echo "2)  🚀 speedtest-cli (teste velocidade Ookla)"
+    echo "2)  🚀 speedtest-cli (teste velocidade Ookla) - CORRIGIDO"
     echo "3)  🔍 nmap (scanner de rede)"
     echo ""
     echo "=== SISTEMA E HARDWARE ==="
@@ -141,20 +177,24 @@ show_menu() {
     echo "8)  🌡️  sensors (sensores de hardware)"
     echo "9)  📊 btop (monitor de sistema avançado)"
     echo ""
-    echo "=== DESENVOLVIMENTO E GIT ==="
+    echo "=== DESENVOLVIMENTO E CONTAINERS ==="
     echo "10) 🐳 lazydocker (interface Docker)"
     echo "11) 🔀 lazygit (interface Git)"
     echo "12) 📁 pathmanager (gerenciador de PATH)"
+    echo "13) 🐋 docker (gerenciador de containers)"
     echo ""
     echo "=== NAVEGAÇÃO E ARQUIVOS ==="
-    echo "13) 🌳 tree (árvore de arquivos)"
-    echo "14) 📍 pwd (diretório atual)"
-    echo "15) 📁 mc (Midnight Commander)"
+    echo "14) 🌳 tree (árvore de arquivos)"
+    echo "15) 📍 pwd (diretório atual)"
+    echo "16) 📁 mc (Midnight Commander)"
+    echo ""
+    echo "=== ADMINISTRAÇÃO ==="
+    echo "17) 🔐 sudo (executar como superusuário)"
     echo ""
     echo "=== GERENCIAMENTO ==="
-    echo "16) ➕ Adicionar nova ferramenta"
-    echo "17) 📋 Listar ferramentas adicionais"
-    echo "18) 🗑️  Remover ferramenta adicional"
+    echo "18) ➕ Adicionar nova ferramenta"
+    echo "19) 📋 Listar ferramentas adicionais"
+    echo "20) 🗑️  Remover ferramenta adicional"
     echo ""
     
     # Carregar e mostrar ferramentas adicionais
@@ -165,7 +205,7 @@ show_menu() {
             local tool_entry=${tools[$i]}
             local cmd=$(echo "$tool_entry" | cut -d'|' -f1)
             local desc=$(echo "$tool_entry" | cut -d'|' -f2)
-            echo "$((i + 19))) 🔧 $cmd ($desc)"
+            echo "$((i + 21))) 🔧 $cmd ($desc)"
         done
         echo ""
     fi
@@ -315,10 +355,10 @@ while true; do
             ;;
         2)
             if check_tool "speedtest-cli"; then
-                run_command "speedtest-cli" "Teste de velocidade via Ookla"
+                run_command "speedtest-cli --secure" "Teste de velocidade via Ookla (CORRIGIDO)"
             else
                 if offer_install "speedtest-cli" "apt update && apt install -y speedtest-cli" "Cliente de teste de velocidade Ookla"; then
-                    run_command "speedtest-cli" "Teste de velocidade via Ookla"
+                    run_command "speedtest-cli --secure" "Teste de velocidade via Ookla (CORRIGIDO)"
                 else
                     read -p "Pressione ENTER para continuar..."
                 fi
@@ -436,6 +476,52 @@ while true; do
             fi
             ;;
         13)
+            if check_tool "docker"; then
+                echo "=== DOCKER - GERENCIADOR DE CONTAINERS ==="
+                echo "1) docker ps (containers em execução)"
+                echo "2) docker ps -a (todos os containers)"
+                echo "3) docker images (listar imagens)"
+                echo "4) docker system df (uso de espaço)"
+                echo "5) docker system prune (limpar sistema)"
+                echo "6) Comando personalizado"
+                echo ""
+                read -p "Escolha uma opção (1-6): " docker_option
+                
+                case $docker_option in
+                    1) run_command "docker ps" "Containers em execução" ;;
+                    2) run_command "docker ps -a" "Todos os containers" ;;
+                    3) run_command "docker images" "Listar imagens Docker" ;;
+                    4) run_command "docker system df" "Uso de espaço Docker" ;;
+                    5) 
+                        echo "⚠️  Esta operação irá remover containers, redes, imagens e volumes não utilizados."
+                        read -p "Confirma a limpeza? (s/N): " confirm_prune
+                        if [[ "$confirm_prune" =~ ^[Ss]$ ]]; then
+                            run_command "docker system prune -a" "Limpeza completa do Docker"
+                        fi
+                        ;;
+                    6)
+                        read -p "Digite o comando Docker: " custom_docker_cmd
+                        if [ -n "$custom_docker_cmd" ]; then
+                            run_command "docker $custom_docker_cmd" "Comando Docker personalizado"
+                        fi
+                        ;;
+                    *)
+                        echo "Opção inválida!"
+                        read -p "Pressione ENTER para continuar..."
+                        ;;
+                esac
+            else
+                echo "⚠️  Docker não encontrado."
+                read -p "Deseja instalar Docker? (s/N): " install_confirm
+                if [[ "$install_confirm" =~ ^[Ss]$ ]]; then
+                    if install_docker; then
+                        echo "Docker instalado! Reinicie o terminal ou faça logout/login para usar sem sudo."
+                        read -p "Pressione ENTER para continuar..."
+                    fi
+                fi
+            fi
+            ;;
+        14)
             if check_tool "tree"; then
                 run_command "tree" "Árvore de arquivos"
             else
@@ -446,10 +532,10 @@ while true; do
                 fi
             fi
             ;;
-        14)
+        15)
             run_command "pwd && ls -la" "Diretório atual e conteúdo"
             ;;
-        15)
+        16)
             if check_tool "mc"; then
                 echo "Executando Midnight Commander..."
                 mc
@@ -462,13 +548,49 @@ while true; do
                 fi
             fi
             ;;
-        16)
-            add_tool
-            ;;
         17)
-            list_additional_tools
+            if check_tool "sudo"; then
+                echo "=== SUDO - EXECUTAR COMO SUPERUSUÁRIO ==="
+                echo "1) sudo su (tornar-se root)"
+                echo "2) Comando personalizado com sudo"
+                echo "3) Verificar permissões sudo"
+                echo ""
+                read -p "Escolha uma opção (1-3): " sudo_option
+                
+                case $sudo_option in
+                    1) 
+                        echo "Executando sudo su - você se tornará root"
+                        sudo su
+                        ;;
+                    2)
+                        read -p "Digite o comando para executar com sudo: " custom_sudo_cmd
+                        if [ -n "$custom_sudo_cmd" ]; then
+                            run_command "sudo $custom_sudo_cmd" "Comando com sudo"
+                        fi
+                        ;;
+                    3)
+                        run_command "sudo -l" "Verificar permissões sudo"
+                        ;;
+                    *)
+                        echo "Opção inválida!"
+                        read -p "Pressione ENTER para continuar..."
+                        ;;
+                esac
+            else
+                if offer_install "sudo" "apt update && apt install -y sudo" "Ferramenta para executar comandos como superusuário"; then
+                    echo "✅ sudo instalado! Configure um usuário para usar sudo:"
+                    echo "usermod -aG sudo nome_do_usuario"
+                    read -p "Pressione ENTER para continuar..."
+                fi
+            fi
             ;;
         18)
+            add_tool
+            ;;
+        19)
+            list_additional_tools
+            ;;
+        20)
             remove_tool
             ;;
         0)
@@ -478,8 +600,8 @@ while true; do
         *)
             # Verificar se é uma ferramenta adicional
             load_additional_tools
-            if [[ $option =~ ^[0-9]+$ ]] && [ "$option" -ge 19 ]; then
-                idx=$((option - 19))
+            if [[ $option =~ ^[0-9]+$ ]] && [ "$option" -ge 21 ]; then
+                idx=$((option - 21))
                 if [ $idx -ge 0 ] && [ $idx -lt ${#tools[@]} ]; then
                     run_additional_tool $idx
                 else
