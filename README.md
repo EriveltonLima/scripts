@@ -2,19 +2,20 @@
 
 Uma coleção de scripts úteis para administração de sistemas Linux, automação e produtividade.
 
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
-[![Shell Script](https://img.shields.io/badge/Shell-Bash-blue.svg)](https://www.gnu.org/software/bash/)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/EriveltonLima/scripts/graphs/commit-activity)
-
 ## 📋 Índice
 
-- [Sobre](#sobre)
-- [Scripts Disponíveis](#scripts-disponíveis)
-- [Instalação](#instalação)
-- [Como Usar](#como-usar)
-- [Contribuição](#contribuição)
-- [Licença](#licença)
-- [Contato](#contato)
+- [🎯 Sobre](#-sobre)
+- [🌟 Características](#-características)
+- [📦 Scripts Disponíveis](#-scripts-disponíveis)
+- [🚀 Instalação](#-instalação)
+- [💡 Como Usar](#-como-usar)
+- [🎨 Capturas de Tela](#-capturas-de-tela)
+- [🔧 Requisitos](#-requisitos)
+- [🤝 Contribuição](#-contribuição)
+- [🐛 Reportar Bugs](#-reportar-bugs)
+- [📈 Roadmap](#-roadmap)
+- [📄 Licença](#-licença)
+- [👨💻 Autor](#-autor)
 
 ## 🎯 Sobre
 
@@ -53,13 +54,6 @@ Este repositório contém uma coleção de scripts bash desenvolvidos para facil
 |--------|-----------|-----|
 | `cloudflare.linux.sh` | Configurações Cloudflare para Linux | `./cloudflare.linux.sh` |
 | `cloudflare.proxmox.sh` | Configurações Cloudflare para Proxmox | `./cloudflare.proxmox.sh` |
-
-### 🔧 Utilitários
-
-| Script | Descrição | Uso |
-|--------|-----------|-----|
-| `erro_lazy.sh` | Corretor de erros comuns do LazyGit | `./erro_lazy.sh` |
-| `teste2.sh` | Script de testes diversos | `./teste2.sh` |
 
 ## 🚀 Instalação
 
@@ -131,6 +125,7 @@ text
 ## 🎨 Capturas de Tela
 
 ### DiskView - Visualizador de Disco
+
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║ DISKVIEW ULTRA ║
 ║ Visualizador Interativo de Espaço em Disco ║
@@ -145,16 +140,19 @@ text
 
 ## 🔧 Requisitos
 
-- **SO:** Linux (Ubuntu, Debian, CentOS, etc.)
-- **Shell:** Bash 4.0+
-- **Dependências:** Instaladas automaticamente pelos scripts
+**SO:** Linux (Ubuntu, Debian, CentOS, etc.)
+**Shell:** Bash 4.0+
+**Dependências:** Instaladas automaticamente pelos scripts
 
 ### Dependências Opcionais
 
 - `curl` e `wget` para downloads
 - `git` para versionamento
 - `docker` para scripts relacionados
-- Permissões `sudo` para alguns scripts
+
+### Permissões
+
+- `sudo` para alguns scripts
 
 ## 🤝 Contribuição
 
@@ -175,7 +173,7 @@ Contribuições são bem-vindas! Siga estes passos:
 
 ## 🐛 Reportar Bugs
 
-Encontrou um bug? Abra uma [issue](https://github.com/EriveltonLima/scripts/issues) com:
+Encontrou um bug? Abra uma issue com:
 
 - Descrição detalhada do problema
 - Passos para reproduzir
@@ -195,12 +193,13 @@ Encontrou um bug? Abra uma [issue](https://github.com/EriveltonLima/scripts/issu
 ![GitHub stars](https://img.shields.io/github/stars/EriveltonLima/scripts)
 ![GitHub forks](https://img.shields.io/github/forks/EriveltonLima/scripts)
 ![GitHub issues](https://img.shields.io/github/issues/EriveltonLima/scripts)
+![GitHub license](https://img.shields.io/github/license/EriveltonLima/scripts)
 
 ## 📄 Licença
 
 Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
 
-## 👨‍💻 Autor
+## 👨💻 Autor
 
 **Erivelton de Lima da Cruz**
 
@@ -218,4 +217,4 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICE
 
 ---
 
-⭐ **Se este projeto foi útil, considere dar uma estrela!** ⭐
+**Se este projeto foi útil, considere dar uma estrela!** ⭐
