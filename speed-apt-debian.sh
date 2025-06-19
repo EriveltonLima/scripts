@@ -38,7 +38,7 @@ fi
 if [ -f /etc/os-release ]; then
     . /etc/os-release
     DISTRO=$ID
-    VERSION_CODENAME=$VERSION_CODENAME
+    VERSION_CODENAME=${VERSION_CODENAME:-$UBUNTU_CODENAME}
 else
     error "Não foi possível detectar a distribuição"
     exit 1
@@ -75,24 +75,44 @@ title "1. OTIMIZAÇÃO DO APT"
 # Backup de arquivos APT
 backup_file "/etc/apt/sources.list"
 
-# Configurar mirrors mais rápidos
-log "Configurando mirrors brasileiros rápidos..."
+# Configurar mirrors brasileiros mais rápidos
+log "Configurando mirrors brasileiros otimizados..."
 
 if [ "$DISTRO" = "debian" ]; then
+    # Configuração corrigida para Debian com repositórios brasileiros
     cat > /etc/apt/sources.list << EOF
 # Mirrors brasileiros otimizados - Debian $VERSION_CODENAME
+# Mirror principal UFPR (C3SL)
 deb http://debian.c3sl.ufpr.br/debian/ $VERSION_CODENAME main contrib non-free non-free-firmware
+deb-src http://debian.c3sl.ufpr.br/debian/ $VERSION_CODENAME main contrib non-free non-free-firmware
+
+# Atualizações de segurança
+deb http://security.debian.org/debian-security $VERSION_CODENAME-security main contrib non-free non-free-firmware
+deb-src http://security.debian.org/debian-security $VERSION_CODENAME-security main contrib non-free non-free-firmware
+
+# Atualizações regulares
 deb http://debian.c3sl.ufpr.br/debian/ $VERSION_CODENAME-updates main contrib non-free non-free-firmware
-deb http://debian.c3sl.ufpr.br/debian-security/ $VERSION_CODENAME-security main contrib non-free non-free-firmware
+deb-src http://debian.c3sl.ufpr.br/debian/ $VERSION_CODENAME-updates main contrib non-free non-free-firmware
+
+# Backports
 deb http://debian.c3sl.ufpr.br/debian/ $VERSION_CODENAME-backports main contrib non-free non-free-firmware
+deb-src http://debian.c3sl.ufpr.br/debian/ $VERSION_CODENAME-backports main contrib non-free non-free-firmware
 EOF
+
 elif [ "$DISTRO" = "ubuntu" ]; then
     cat > /etc/apt/sources.list << EOF
 # Mirrors brasileiros otimizados - Ubuntu $VERSION_CODENAME
 deb http://br.archive.ubuntu.com/ubuntu/ $VERSION_CODENAME main restricted universe multiverse
+deb-src http://br.archive.ubuntu.com/ubuntu/ $VERSION_CODENAME main restricted universe multiverse
+
 deb http://br.archive.ubuntu.com/ubuntu/ $VERSION_CODENAME-updates main restricted universe multiverse
+deb-src http://br.archive.ubuntu.com/ubuntu/ $VERSION_CODENAME-updates main restricted universe multiverse
+
 deb http://br.archive.ubuntu.com/ubuntu/ $VERSION_CODENAME-backports main restricted universe multiverse
+deb-src http://br.archive.ubuntu.com/ubuntu/ $VERSION_CODENAME-backports main restricted universe multiverse
+
 deb http://security.ubuntu.com/ubuntu/ $VERSION_CODENAME-security main restricted universe multiverse
+deb-src http://security.ubuntu.com/ubuntu/ $VERSION_CODENAME-security main restricted universe multiverse
 EOF
 fi
 
@@ -116,7 +136,7 @@ Dir::Cache::pkgcache "";
 Dir::Cache::srcpkgcache "";
 EOF
 
-# Desabilitar IPv6 se causar problemas
+# Configurar preferência IPv4
 log "Configurando preferência IPv4..."
 echo 'Acquire::ForceIPv4 "true";' > /etc/apt/apt.conf.d/99force-ipv4
 
@@ -155,15 +175,15 @@ else
     warn "Otimizações de rede puladas (sistema container)"
 fi
 
-# Configurar DNS mais rápidos
-log "Configurando DNS rápidos..."
+# Configurar DNS brasileiros mais rápidos
+log "Configurando DNS brasileiros otimizados..."
 backup_file "/etc/resolv.conf"
 cat > /etc/resolv.conf << EOF
-# DNS otimizados para velocidade
+# DNS otimizados para Brasil
 nameserver 1.1.1.1
 nameserver 1.0.0.1
-nameserver 8.8.8.8
-nameserver 8.8.4.4
+nameserver 208.67.222.222
+nameserver 208.67.220.220
 options timeout:2 attempts:3 rotate single-request-reopen
 EOF
 
@@ -199,6 +219,7 @@ title "4. OTIMIZAÇÃO DE I/O E DISCO"
 # Configurar I/O scheduler (apenas se não for container)
 if [ "$IS_CONTAINER" = false ]; then
     log "Configurando I/O scheduler..."
+    mkdir -p /etc/udev/rules.d/
     cat > /etc/udev/rules.d/60-ioschedulers.rules << EOF
 # Otimizar I/O schedulers
 ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="mq-deadline"
@@ -210,12 +231,12 @@ else
 fi
 
 # Configurar fstab para melhor performance (apenas se existir)
-if [ -f /etc/fstab ]; then
+if [ -f /etc/fstab ] && [ "$IS_CONTAINER" = false ]; then
     log "Otimizando opções de montagem..."
     backup_file "/etc/fstab"
     sed -i 's/errors=remount-ro/errors=remount-ro,noatime,commit=60/' /etc/fstab
 else
-    warn "Arquivo /etc/fstab não encontrado - otimizações de montagem puladas"
+    warn "Arquivo /etc/fstab não encontrado ou sistema container - otimizações de montagem puladas"
 fi
 
 title "5. OTIMIZAÇÃO DE SERVIÇOS"
@@ -241,18 +262,15 @@ else
 fi
 
 # Configurar journald para usar menos espaço
-if [ -d /etc/systemd/journald.conf.d/ ] || mkdir -p /etc/systemd/journald.conf.d/ 2>/dev/null; then
-    log "Otimizando journald..."
-    cat > /etc/systemd/journald.conf.d/99-speedup.conf << EOF
+log "Otimizando journald..."
+mkdir -p /etc/systemd/journald.conf.d/
+cat > /etc/systemd/journald.conf.d/99-speedup.conf << EOF
 [Journal]
 SystemMaxUse=100M
 SystemMaxFileSize=10M
 MaxRetentionSec=1week
 Compress=yes
 EOF
-else
-    warn "Não foi possível configurar journald"
-fi
 
 title "6. OTIMIZAÇÃO DE BOOT"
 
@@ -264,6 +282,7 @@ if [ "$IS_CONTAINER" = false ] && [ -f /etc/default/grub ]; then
     sed -i 's/#GRUB_TIMEOUT_STYLE=.*/GRUB_TIMEOUT_STYLE=hidden/' /etc/default/grub
     if command -v update-grub >/dev/null 2>&1; then
         update-grub >/dev/null 2>&1
+        log "GRUB atualizado"
     fi
 else
     warn "Otimização de boot pulada (sistema container ou GRUB não encontrado)"
@@ -273,17 +292,17 @@ title "7. LIMPEZA E MANUTENÇÃO"
 
 # Limpeza do sistema
 log "Executando limpeza do sistema..."
-apt update >/dev/null 2>&1
-apt autoremove -y >/dev/null 2>&1
-apt autoclean >/dev/null 2>&1
+apt update >/dev/null 2>&1 || warn "Falha ao atualizar lista de pacotes"
+apt autoremove -y >/dev/null 2>&1 || warn "Falha ao remover pacotes órfãos"
+apt autoclean >/dev/null 2>&1 || warn "Falha ao limpar cache"
 
 # Limpar logs antigos
 if command -v journalctl >/dev/null 2>&1; then
-    journalctl --vacuum-time=7d >/dev/null 2>&1
-    journalctl --vacuum-size=100M >/dev/null 2>&1
+    journalctl --vacuum-time=7d >/dev/null 2>&1 || warn "Falha ao limpar logs antigos"
+    journalctl --vacuum-size=100M >/dev/null 2>&1 || warn "Falha ao limitar tamanho dos logs"
 fi
 
-# Limpar cache
+# Limpar cache temporário
 find /tmp -type f -atime +7 -delete 2>/dev/null || true
 find /var/tmp -type f -atime +7 -delete 2>/dev/null || true
 
@@ -291,7 +310,7 @@ title "8. CONFIGURAÇÕES FINAIS"
 
 # Aplicar configurações sysctl (apenas se não for container)
 if [ "$IS_CONTAINER" = false ]; then
-    sysctl -p >/dev/null 2>&1
+    sysctl -p >/dev/null 2>&1 || warn "Falha ao aplicar configurações sysctl"
 fi
 
 # Criar script de manutenção automática
@@ -315,6 +334,7 @@ chmod +x /usr/local/bin/sistema-manutencao
 # Configurar cron para manutenção semanal (apenas se não for container)
 if [ "$IS_CONTAINER" = false ] && command -v crontab >/dev/null 2>&1; then
     (crontab -l 2>/dev/null; echo "0 2 * * 0 /usr/local/bin/sistema-manutencao >> /var/log/manutencao.log 2>&1") | crontab -
+    log "Manutenção automática semanal configurada"
 fi
 
 title "OTIMIZAÇÃO CONCLUÍDA"
@@ -322,9 +342,10 @@ title "OTIMIZAÇÃO CONCLUÍDA"
 log "Otimizações aplicadas com sucesso!"
 echo ""
 echo "=== RESUMO DAS OTIMIZAÇÕES ==="
-echo "✓ Mirrors brasileiros configurados"
+echo "✓ Mirrors brasileiros UFPR configurados"
+echo "✓ Repositórios Debian com non-free-firmware"
 echo "✓ Configurações APT otimizadas"
-echo "✓ DNS rápidos configurados"
+echo "✓ DNS brasileiros rápidos configurados"
 if [ "$IS_CONTAINER" = false ]; then
     echo "✓ Parâmetros de rede otimizados"
     echo "✓ I/O schedulers configurados"
@@ -340,4 +361,3 @@ if [ "$IS_CONTAINER" = false ]; then
 else
     warn "Reinicie o container para aplicar as otimizações de rede"
 fi
-
