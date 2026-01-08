@@ -33,50 +33,49 @@ Este repositório contém uma coleção de scripts bash desenvolvidos para facil
 
 ### 🖥️ Monitoramento e Sistema
 
-| Script                | Descrição                                                | Uso                     |
-| --------------------- | -------------------------------------------------------- | ----------------------- |
-| `diskview.sh`         | Visualizador interativo de espaço em disco (estilo ncdu) | `./diskview.sh`         |
-| `status-servidor.sh`  | Dashboard resumido do status do servidor                 | `./status-servidor.sh`  |
-| `drive-perfomance.sh` | Teste de velocidade de leitura/escrita de disco          | `./drive-perfomance.sh` |
-| `drive-teste.sh`      | Teste de integridade de disco                            | `./drive-teste.sh`      |
+| Script                           | Descrição                                                | Uso                                |
+| -------------------------------- | -------------------------------------------------------- | ---------------------------------- |
+| `monitoring/diskview.sh`         | Visualizador interativo de espaço em disco (estilo ncdu) | `./monitoring/diskview.sh`         |
+| `monitoring/status-servidor.sh`  | Dashboard resumido do status do servidor                 | `./monitoring/status-servidor.sh`  |
+| `monitoring/drive-perfomance.sh` | Teste de velocidade de leitura/escrita de disco          | `./monitoring/drive-perfomance.sh` |
+| `monitoring/drive-teste.sh`      | Teste de integridade de disco                            | `./monitoring/drive-teste.sh`      |
 
 ### ⚡ Otimização e Performance
 
-| Script                | Descrição                                          | Uso                          |
-| --------------------- | -------------------------------------------------- | ---------------------------- |
-| `speed-apt-debian.sh` | Acelera downloads do APT e otimiza rede no Debian  | `sudo ./speed-apt-debian.sh` |
-| `speed-core-nvme.sh`  | Otimizações específicas para núcleos e NVMe        | `sudo ./speed-core-nvme.sh`  |
-| `otimize-proxmox.sh`  | Diagnóstico e correção de performance para Proxmox | `./otimize-proxmox.sh`       |
+| Script                       | Descrição                                          | Uso                                |
+| ---------------------------- | -------------------------------------------------- | ---------------------------------- |
+| `setup/speed-apt-debian.sh`  | Acelera downloads do APT e otimiza rede no Debian  | `sudo ./setup/speed-apt-debian.sh` |
+| `setup/speed-core-nvme.sh`   | Otimizações específicas para núcleos e NVMe        | `sudo ./setup/speed-core-nvme.sh`  |
+| `proxmox/otimize-proxmox.sh` | Diagnóstico e correção de performance para Proxmox | `./proxmox/otimize-proxmox.sh`     |
 
 ### 🏢 Proxmox & Virtualização
 
-| Script                     | Descrição                                 | Uso                          |
-| -------------------------- | ----------------------------------------- | ---------------------------- |
-| `controle-boot-proxmox.sh` | Gerencia ordem e delay de boot de VMs/CTs | `./controle-boot-proxmox.sh` |
-| `ip-reverso-proxmox.sh`    | Configura DNS reverso no Proxmox          | `./ip-reverso-proxmox.sh`    |
-| `root-ssh-proxmox.sh`      | Habilita SSH Root seguro no Proxmox       | `./root-ssh-proxmox.sh`      |
-| `proxmox-comandos.sh`      | Coleção de comandos úteis para Proxmox    | `./proxmox-comandos.sh`      |
+| Script                             | Descrição                                 | Uso                                  |
+| ---------------------------------- | ----------------------------------------- | ------------------------------------ |
+| `proxmox/controle-boot-proxmox.sh` | Gerencia ordem e delay de boot de VMs/CTs | `./proxmox/controle-boot-proxmox.sh` |
+| `proxmox/ip-reverso-proxmox.sh`    | Configura DNS reverso no Proxmox          | `./proxmox/ip-reverso-proxmox.sh`    |
+| `proxmox/root-ssh-proxmox.sh`      | Habilita SSH Root seguro no Proxmox       | `./proxmox/root-ssh-proxmox.sh`      |
+| `proxmox/proxmox-comandos.sh`      | Coleção de comandos úteis para Proxmox    | `./proxmox/proxmox-comandos.sh`      |
 
 ### 🛠️ Ferramentas e Utilitários
 
-| Script                  | Descrição                                          | Uso                            |
-| ----------------------- | -------------------------------------------------- | ------------------------------ |
-| `pangolin.sh`           | **NOVO!** Gerador de Blueprint para Pangolin Proxy | `curl .../pangolin.sh \| bash` |
-| `install-git.sh`        | Instala Git e configura credenciais                | `./install-git.sh`             |
-| `install-lazygit.sh`    | Instala LazyGit (TUI para Git)                     | `./install-lazygit.sh`         |
-| `install-lazydocker.sh` | Instala LazyDocker (TUI para Docker)               | `./install-lazydocker.sh`      |
-| `pathmanager.sh`        | Gerencia scripts no PATH do sistema                | `./pathmanager.sh`             |
-| `scp-transfer.sh`       | Transferência de arquivos via SCP com interface    | `./scp-transfer.sh`            |
+| Script                             | Descrição                                          | Uso                                  |
+| ---------------------------------- | -------------------------------------------------- | ------------------------------------ |
+| `pangolin.sh`                      | **NOVO!** Gerador de Blueprint para Pangolin Proxy | `curl .../pangolin.sh \| bash`       |
+| `installers/install-git.sh`        | Instala Git e configura credenciais                | `./installers/install-git.sh`        |
+| `installers/install-lazygit.sh`    | Instala LazyGit (TUI para Git)                     | `./installers/install-lazygit.sh`    |
+| `installers/install-lazydocker.sh` | Instala LazyDocker (TUI para Docker)               | `./installers/install-lazydocker.sh` |
+| `utils/pathmanager.sh`             | Gerencia scripts no PATH do sistema                | `./utils/pathmanager.sh`             |
+| `utils/scp-transfer.sh`            | Transferência de arquivos via SCP com interface    | `./utils/scp-transfer.sh`            |
 
 ### ⚙️ Configuração e Setup
 
-| Script                  | Descrição                                  | Uso                       |
-| ----------------------- | ------------------------------------------ | ------------------------- |
-| `inicio-debian.sh`      | Setup inicial para servidores Debian novos | `./inicio-debian.sh`      |
-| `root-ssh.sh`           | Configura acesso SSH Root                  | `./root-ssh.sh`           |
-| `root-ssh-container.sh` | Configura SSH Root em containers           | `./root-ssh-container.sh` |
-| `git-api.sh`            | Ferramentas de interação com API do GitHub | `./git-api.sh`            |
-| `cloudflare.linux.sh`   | Configurações Cloudflare (DDNS/Tunnel)     | `./cloudflare.linux.sh`   |
+| Script                        | Descrição                                  | Uso                             |
+| ----------------------------- | ------------------------------------------ | ------------------------------- |
+| `setup/inicio-debian.sh`      | Setup inicial para servidores Debian novos | `./setup/inicio-debian.sh`      |
+| `setup/root-ssh.sh`           | Configura acesso SSH Root                  | `./setup/root-ssh.sh`           |
+| `setup/root-ssh-container.sh` | Configura SSH Root em containers           | `./setup/root-ssh-container.sh` |
+| `utils/git-api.sh`            | Ferramentas de interação com API do GitHub | `./utils/git-api.sh`            |
 
 ## 🚀 Instalação
 
