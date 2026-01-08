@@ -33,27 +33,50 @@ Este repositório contém uma coleção de scripts bash desenvolvidos para facil
 
 ### 🖥️ Monitoramento e Sistema
 
-| Script | Descrição | Uso |
-|--------|-----------|-----|
-| `diskview.sh` | Visualizador interativo de espaço em disco (alternativa visual ao df -h) | `./diskview.sh` |
-| `speed-apt.sh` | Otimizador de velocidade para APT e sistema | `sudo ./speed-apt.sh` |
-| `status_servidor_v2.sh` | Monitor completo de status do servidor | `./status_servidor_v2.sh` |
+| Script                | Descrição                                                | Uso                     |
+| --------------------- | -------------------------------------------------------- | ----------------------- |
+| `diskview.sh`         | Visualizador interativo de espaço em disco (estilo ncdu) | `./diskview.sh`         |
+| `status-servidor.sh`  | Dashboard resumido do status do servidor                 | `./status-servidor.sh`  |
+| `drive-perfomance.sh` | Teste de velocidade de leitura/escrita de disco          | `./drive-perfomance.sh` |
+| `drive-teste.sh`      | Teste de integridade de disco                            | `./drive-teste.sh`      |
 
-### 🛠️ Instalação e Configuração
+### ⚡ Otimização e Performance
 
-| Script | Descrição | Uso |
-|--------|-----------|-----|
-| `install-git.sh` | Instalador automático do Git com configurações | `./install-git.sh` |
-| `install-lazygit.sh` | Instalador do LazyGit (interface visual para Git) | `./install-lazygit.sh` |
-| `install-lazydocker.sh` | Instalador do LazyDocker (interface visual para Docker) | `./install-lazydocker.sh` |
-| `pathmanager.sh` | Gerenciador de scripts no PATH | `./pathmanager.sh add script.sh` |
+| Script                | Descrição                                          | Uso                          |
+| --------------------- | -------------------------------------------------- | ---------------------------- |
+| `speed-apt-debian.sh` | Acelera downloads do APT e otimiza rede no Debian  | `sudo ./speed-apt-debian.sh` |
+| `speed-core-nvme.sh`  | Otimizações específicas para núcleos e NVMe        | `sudo ./speed-core-nvme.sh`  |
+| `otimize-proxmox.sh`  | Diagnóstico e correção de performance para Proxmox | `./otimize-proxmox.sh`       |
 
-### ☁️ Cloud e Rede
+### 🏢 Proxmox & Virtualização
 
-| Script | Descrição | Uso |
-|--------|-----------|-----|
-| `cloudflare.linux.sh` | Configurações Cloudflare para Linux | `./cloudflare.linux.sh` |
-| `cloudflare.proxmox.sh` | Configurações Cloudflare para Proxmox | `./cloudflare.proxmox.sh` |
+| Script                     | Descrição                                 | Uso                          |
+| -------------------------- | ----------------------------------------- | ---------------------------- |
+| `controle-boot-proxmox.sh` | Gerencia ordem e delay de boot de VMs/CTs | `./controle-boot-proxmox.sh` |
+| `ip-reverso-proxmox.sh`    | Configura DNS reverso no Proxmox          | `./ip-reverso-proxmox.sh`    |
+| `root-ssh-proxmox.sh`      | Habilita SSH Root seguro no Proxmox       | `./root-ssh-proxmox.sh`      |
+| `proxmox-comandos.sh`      | Coleção de comandos úteis para Proxmox    | `./proxmox-comandos.sh`      |
+
+### 🛠️ Ferramentas e Utilitários
+
+| Script                  | Descrição                                          | Uso                            |
+| ----------------------- | -------------------------------------------------- | ------------------------------ |
+| `pangolin.sh`           | **NOVO!** Gerador de Blueprint para Pangolin Proxy | `curl .../pangolin.sh \| bash` |
+| `install-git.sh`        | Instala Git e configura credenciais                | `./install-git.sh`             |
+| `install-lazygit.sh`    | Instala LazyGit (TUI para Git)                     | `./install-lazygit.sh`         |
+| `install-lazydocker.sh` | Instala LazyDocker (TUI para Docker)               | `./install-lazydocker.sh`      |
+| `pathmanager.sh`        | Gerencia scripts no PATH do sistema                | `./pathmanager.sh`             |
+| `scp-transfer.sh`       | Transferência de arquivos via SCP com interface    | `./scp-transfer.sh`            |
+
+### ⚙️ Configuração e Setup
+
+| Script                  | Descrição                                  | Uso                       |
+| ----------------------- | ------------------------------------------ | ------------------------- |
+| `inicio-debian.sh`      | Setup inicial para servidores Debian novos | `./inicio-debian.sh`      |
+| `root-ssh.sh`           | Configura acesso SSH Root                  | `./root-ssh.sh`           |
+| `root-ssh-container.sh` | Configura SSH Root em containers           | `./root-ssh-container.sh` |
+| `git-api.sh`            | Ferramentas de interação com API do GitHub | `./git-api.sh`            |
+| `cloudflare.linux.sh`   | Configurações Cloudflare (DDNS/Tunnel)     | `./cloudflare.linux.sh`   |
 
 ## 🚀 Instalação
 
@@ -66,7 +89,7 @@ Entrar no diretório
 cd scripts
 
 Dar permissões de execução
-chmod +x *.sh
+chmod +x \*.sh
 
 text
 
