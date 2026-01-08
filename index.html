@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>HomLab Scripts Repository</title>
+    <style>
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background: #1a1a2e;
+        color: #eee;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+      }
+      h1 {
+        color: #00d9ff;
+        border-bottom: 2px solid #00d9ff;
+        padding-bottom: 10px;
+      }
+      .script {
+        background: #16213e;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+        border-left: 4px solid #00d9ff;
+      }
+      .script h3 {
+        margin: 0 0 10px 0;
+        color: #00d9ff;
+      }
+      .script p {
+        margin: 5px 0;
+        color: #aaa;
+      }
+      code {
+        background: #0f0f23;
+        padding: 8px 12px;
+        border-radius: 4px;
+        display: block;
+        margin-top: 10px;
+        color: #00ff88;
+        font-size: 14px;
+      }
+      .copy-btn {
+        background: #00d9ff;
+        color: #000;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-left: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🚀 HomLab Scripts Repository</h1>
+    <p>Scripts prontos para instalar via curl | bash</p>
+
+    <div class="script">
+      <h3>📦 Pangolin Blueprint Generator</h3>
+      <p>
+        Gera blueprint YAML para Pangolin Proxy a partir dos containers Docker.
+      </p>
+      <code
+        >curl -fsSL https://proxmox.homlab.site/scripts/pangolin.sh | sudo
+        bash</code
+      >
+    </div>
+
+    <div class="script">
+      <h3>🔧 Adicione mais scripts aqui...</h3>
+      <p>Coloque novos scripts em <code>/var/www/scripts/</code></p>
+    </div>
+
+    <hr style="border-color: #333; margin: 30px 0" />
+    <p style="color: #666; font-size: 12px">
+      HomLab Infrastructure - homlab.site
+    </p>
+  </body>
+</html>
